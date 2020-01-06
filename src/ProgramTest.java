@@ -344,11 +344,21 @@ public class ProgramTest {
         assertTrue(pass);
     }
 
+    /**
+     * This function will return a random array with a random size and random values
+     * @return - Random array
+     */
     private int [] randomArray()
     {
         int size = 1 + this.rand.nextInt(this.BOUND);
         return randomArray(size);
     }
+
+    /**
+     * This function will return a random array with a given size and random values
+     * @param size  - given size
+     * @return - Random array
+     */
     private int [] randomArray(int size)
     {
 
@@ -418,8 +428,8 @@ public class ProgramTest {
         try
         {
             int [] arr = Program.swapMinMax(array);
-            assertTrue(arr !=null);
-            assertEquals(array.length,arr.length);
+            assertTrue(arr ==null);
+
 
         }
         catch(Exception e)
@@ -460,18 +470,28 @@ public class ProgramTest {
     }
 
     /**
-     * This function will check the sortArrayIndex function when the input is valid
+     * This function will return if the second array are has the same elements as the first array
+     * @param array1 - The first given array
+     * @param array2 - The second given array
+     * @return - True IFF the first and second array have the same elements
      */
-    @Test
-    public void  sortArrayValidCheck()
+    private boolean sameElements(int [] array1,int [] array2)
     {
-        int [] array = randomArray();
         HashMap<Integer,Integer> values = new HashMap<>();
         int num;
         int count;
-        for(int i=0;i<array.length-1;i++)
+        if(array1 == null && array2 == null)
+            return true;
+
+        if(array1 == null || array2 == null)
+            return false;
+
+        if(array1.length!=array2.length)
+            return false;
+
+        for(int i=0;i<array1.length;i++)
         {
-            num = array[i];
+            num = array1[i];
             if(!values.containsKey(num))
             {
                 values.put(num,0);
@@ -479,27 +499,35 @@ public class ProgramTest {
             count = values.get(num);
             values.put(num,count+1);
         }
-
-        int [] arr = Program.sortArray(array);
-        assertTrue(arr!=array);
-        assertEquals(arr.length,array.length);
-
-        for(int i=0;i<arr.length-1;i++)
+        for(int i=0;i<array2.length;i++)
         {
-            assertTrue(arr[i]<=arr[i+1]);
-            assertTrue(values.containsKey(arr[i]));
-            count = values.get(arr[i]);
-            values.put(arr[i],count-1);
+            if(!values.containsKey(array2[i]))
+                return false;
+            count = values.get(array2[i]);
+            values.put(array2[i],count-1);
         }
-        //last
-        assertTrue(values.containsKey(arr[arr.length-1]));
-        count = values.get(arr[arr.length-1]);
-        values.put(arr[arr.length-1],count-1);
+
 
         for(Integer appear : values.values())
         {
-            assertEquals(appear.intValue(),0);
+            if(appear.intValue()!=0)
+                return false;
         }
+        return true;
+    }
+    /**
+     * This function will check the sortArrayIndex function when the input is valid
+     */
+    @Test
+    public void  sortArrayValidCheck()
+    {
+        int [] array = randomArray();
+        int [] arr = Program.sortArray(array);
+        assertTrue(arr!=array);
+        assertEquals(arr.length,array.length);
+       assertTrue(sameElements(array,arr));
+
+
     }
 
     /**
@@ -525,6 +553,229 @@ public class ProgramTest {
 
     }
 
-   //@Test
-   // public void
+    /**
+     * This function will check the function equalArray when the inputs are 2 nulls
+     */
+   @Test
+   public void equalArraysWhenBothNull()
+   {
+       int [] arr1 = null;
+       int [] arr2 = null;
+       assertTrue(Program.equalArrays(arr1,arr2));
+       assertTrue(Program.equalArrays(arr2,arr1));
+   }
+
+    /**
+     * This function will check the function equalArray when the inputs are one null object and one random array
+     */
+    @Test
+    public void equalArraysWhenOnlyOneNull()
+    {
+        int [] arr1 = randomArray();
+        int [] arr2 = null;
+        assertTrue(!Program.equalArrays(arr1,arr2));
+        assertTrue(!Program.equalArrays(arr2,arr1));
+    }
+
+    /**
+     * This function will check the function equalArray when the inputs are 2 empty arrays
+     */
+    @Test
+    public void equalArraysWhenBothEmpty()
+    {
+        int [] arr1 = {};
+        int [] arr2 = {};
+        assertTrue(Program.equalArrays(arr1,arr2));
+        assertTrue(Program.equalArrays(arr2,arr1));
+    }
+
+    /**
+     * This function will check the function equalArray when the inputs are 2 arrays with different sizes
+     */
+    @Test
+    public void equalArraysDifferentSizes()
+    {
+        int [] arr1 = {1,2,3};
+        int [] arr2 = {1,2,3,4};
+        assertTrue(!Program.equalArrays(arr1,arr2));
+        assertTrue(!Program.equalArrays(arr2,arr1));
+    }
+
+    /**
+     * This function will check the function equalArray when the inputs are 2 equal arrays
+     */
+    @Test
+    public void equalArraysEquals()
+    {
+        int [] arr1 = randomArray();
+        int [] arr2 = new int[arr1.length];
+        for(int i=0;i<arr1.length;i++)
+        {
+            arr2[i] = arr1[i];
+        }
+        assertTrue(Program.equalArrays(arr1,arr2));
+        assertTrue(Program.equalArrays(arr2,arr1));
+    }
+
+    /**
+     * This function will check the function equalArray when the inputs are 2 non - equal arrays
+     */
+    @Test
+    public void equalArraysNotEquals()
+    {
+        int [] arr1 = randomArray();
+        int [] arr2 = new int[arr1.length];
+        for(int i=0;i<arr1.length;i++)
+        {
+            arr2[i] = arr1[i];
+        }
+        arr2[0] = this.rand.nextInt(this.BOUND) +this.BOUND + 2;
+        assertTrue(!Program.equalArrays(arr1,arr2));
+        assertTrue(!Program.equalArrays(arr2,arr1));
+    }
+
+    /**
+     * This function will check the isSorted function when the input is null
+     */
+    @Test
+    public void isSortedArrayWhenNull(){
+        int [] array = null;
+        assertTrue(Program.isSorted(array));
+    }
+    /**
+     * This function will check the isSorted function when the input is empty
+     */
+    @Test
+    public void isSortedArrayWhenEmpty(){
+        int [] array = {};
+        assertTrue(Program.isSorted(array));
+    }
+    /**
+     * This function will check the isSorted function when the input is a sorted array
+     */
+    @Test
+    public void isSortedArrayWhenNotSorted(){
+        int [] array = {3,4,1};
+        assertTrue(!Program.isSorted(array));
+    }
+    /**
+     * This function will check the isSorted function when the input is a not sorted array
+     */
+    @Test
+    public void isSortedArrayWhenSorted(){
+        int [] array = {1,2,3,4,5,5};
+        assertTrue(Program.isSorted(array));
+    }
+
+    /**
+     * This function will check the merge function when the inputs are two null arrays
+     */
+    @Test
+    public void mergeTwoNull(){
+        int [] array1 = null;
+        int [] array2 = null;
+        int [] merged = Program.merge(array1,array2);
+        assertTrue(merged == null);
+    }
+    /**
+     * This function will check the merge function when the inputs are one array and one null array
+     */
+    @Test
+    public void mergeOneNull(){
+        int [] array1 = {1,2,3,4};
+        //int [] array1 = randomArray();
+        int [] array2 = null;
+        int [] merged = Program.merge(array1,array2);
+        assertTrue(merged != null);
+        assertTrue(sameElements(array1,merged));
+        merged = array1;
+        array1 = array2;
+        array2 = merged;
+
+        merged = Program.merge(array2,array1);
+        assertTrue(merged != null);
+        assertTrue(sameElements(array2,merged));
+
+    }
+    /**
+     * This function will check the merge function when the inputs are two empty arrays
+     */
+    @Test
+    public void mergeTwoEmpty(){
+        int [] array1 = {};
+        int [] array2 = {};
+        int [] merged = Program.merge(array1,array2);
+        assertTrue(merged != null);
+        assertEquals(array1.length,0);
+    }
+    /**
+     * This function will check the merge function when the inputs are one empty array and one regular array
+     */
+    @Test
+    public void mergeOneEmpty(){
+        int [] array1 = randomArray();
+        int [] array2 = {};
+        int [] merged = Program.merge(array1,array2);
+        assertTrue(merged != null);
+        assertTrue(sameElements(array1,merged));
+        merged = array1;
+        array1 = array2;
+        array2 = merged;
+
+        merged = Program.merge(array2,array1);
+        assertTrue(merged != null);
+        assertTrue(sameElements(array2,merged));
+    }
+
+    /**
+     * This function will check the merge function when the inputs are two arrays
+     */
+    @Test
+    public void mergeTwoArrays(){
+        int [] array1 = randomArray();
+        int [] array2 = randomArray();
+        int [] merged = Program.merge(array1,array2);
+        assertTrue(merged != null);
+        assertEquals(array1.length+array2.length,merged.length);
+        HashMap<Integer,Integer> values = new HashMap<>();
+        int num;
+        int count;
+
+
+
+        for(int i=0;i<array1.length;i++)
+        {
+            num = array1[i];
+            if(!values.containsKey(num))
+            {
+                values.put(num,0);
+            }
+            count = values.get(num);
+            values.put(num,count+1);
+        }
+        for(int i=0;i<array2.length;i++)
+        {
+            num = array2[i];
+            if(!values.containsKey(num))
+            {
+                values.put(num,0);
+            }
+            count = values.get(num);
+            values.put(num,count+1);
+        }
+
+        for(int i=0;i<merged.length;i++)
+        {
+            assertTrue(values.containsKey(merged[i]));
+            count = values.get(merged[i]);
+            values.put(merged[i],count-1);
+        }
+
+
+        for(Integer appear : values.values())
+        {
+            assertEquals(appear.intValue(),0);
+
+        }
+    }
 }
