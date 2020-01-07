@@ -1,7 +1,10 @@
+package System;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Random;
@@ -15,6 +18,10 @@ public class ProgramTest {
 
     private Random rand;// The random variable
     private final int BOUND = 100;//The bound
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
 
     /**
      * This function will set up the class for the unit testing
@@ -23,15 +30,175 @@ public class ProgramTest {
     public void setUp()
     {
         this.rand = new Random();
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
     }
 
+
+    /**
+     * This function will check the printArray function when the input is an empty array
+     */
+    @Test
+    public void printArrayEmptyCheck(){
+        int [] array = {};
+        Program.printArr(array);
+        String output = outContent.toString();
+        String base = "\r\n";
+        assertEquals(base,output);
+
+    }
+
+    /**
+     * This function will check the printArray function when the input is a valid random array
+     */
+    @Test
+    public void printArrayValidCheck(){
+        int [] array = randomArray();
+        Program.printArr(array);
+        String output = outContent.toString();
+        String [] values = output.split(" ");
+        assertTrue(bagOfStringWords(array,values));
+    }
+
+    /**
+     * This function will check if the elements in arr2 (only numbers in string type) are in arr1
+     * @param arr1 - The first array
+     * @param arr2 - The second array
+     * @return - True IFF the elements in arr2 (only numbers in string type) are in arr1
+     */
+    private boolean bagOfStringWords(int [] arr1,String [] arr2)
+    {
+        if(arr1 == null && arr2 == null)
+            return true;
+        if(arr1 == null || arr2 == null)
+            return false;
+        if(arr1.length + 1!=arr2.length)
+            return false;
+        String base = "\r\n";
+        HashMap<String,Integer> numbers = new HashMap<>();
+        numbers.put(base,1);
+        int count;
+        String numString;
+        for(Integer num : arr1)
+        {
+            numString = ""+num;
+            if(!numbers.containsKey(numString))
+            {
+                numbers.put(numString,0);
+            }
+            count = numbers.get(numString);
+            count++;
+            numbers.put(numString,count);
+        }
+
+
+        for(String value : arr2)
+        {
+            if(!numbers.containsKey(value))
+                return false;
+            count = numbers.get(value);
+            count -- ;
+            numbers.put(value,count);
+
+        }
+
+        for(Integer occ : numbers.values())
+        {
+            if(occ.intValue()!=0)
+                return false;
+        }
+        return true;
+    }
+    /**
+     * This function will check the printSorted function when the input is a null array
+     */
+    @Test
+    public void printSortedNull(){
+
+        int [] array = null;
+        Program.printSorted(array);
+        String output = outContent.toString();
+        String base = "\r\n";
+        assertEquals("No array"+ base,output);
+
+    }
+    /**
+     * This function will check the printSorted function when the input is an empty array
+     */
+    @Test
+    public void printSortedEmptyCheck(){
+        int [] array = {};
+        Program.printSorted(array);
+        String output = outContent.toString();
+        String base = "\r\n";
+        assertEquals(base+base+base,output);
+
+    }
+
+    /**
+     * This function will check the printSorted function when the input is a valid random array
+     */
+    @Test
+    public void printSortedValidCheck(){
+
+        int [] array = randomArray();
+        //int [] array = {2,1};
+        Program.printSorted(array);
+        String output = outContent.toString();
+        String [] tempValues = output.split(" ");
+        assertTrue(tempValues.length%3==1);
+        String [] values = new String[tempValues.length+2];
+        int third = values.length /3;
+        int j=0;
+        for(int i=0;i<values.length;i++)
+        {
+            if(j==third-1 || j == 2*(third-1))
+            {
+                values[i] = "\r\n";
+                values[i+1] = tempValues[j].substring(values[i].length());
+                i++;
+            }
+            else
+            {
+                values[i] = tempValues[j];
+
+            }
+            j++;
+        }
+
+        assertTrue(values.length%3==0);
+        String [] valuesNotSorted1 = new String[values.length/3];
+        String [] valuesSorted = new String[values.length/3];
+        String [] valuesNotSorted2 = new String[values.length/3];
+
+        for(int i=0;i<valuesNotSorted1.length;i++)
+        {
+            valuesNotSorted1[i] = values[i];
+            valuesSorted[i] = values[(values.length/3)+i];
+            valuesNotSorted2[i] = values[(2*(values.length/3))+i];
+        }
+
+        assertTrue(bagOfStringWords(array,valuesNotSorted1));
+        assertTrue(bagOfStringWords(array,valuesSorted));
+        assertTrue(bagOfStringWords(array,valuesNotSorted2));
+
+        int num1,num2;
+        for(int i=0;i<valuesSorted.length - 2;i++)//Without '\r\n'
+        {
+            num1 = Integer.parseInt(valuesSorted[i]);
+            num2 = Integer.parseInt(valuesSorted[i+1]);
+            assertTrue(num2>=num1);
+        }
+
+
+    }
     /**
      * This function will check the size function when the input is null
      */
     @Test
-   public void sizeCheckForNull()
-   {
-       boolean pass = true;
+    public void sizeCheckForNull()
+    {
+        boolean pass = true;
         try {
             Program.size(null);
         }
@@ -40,38 +207,38 @@ public class ProgramTest {
             pass = false;
 
         }
-       assertTrue(pass);
-   }
+        assertTrue(pass);
+    }
 
     /**
      * This function will check the size function when the input is valid
      */
-   @Test
-   public void validSizeCheck()
-   {
-       int arraySize = this.rand.nextInt(this.BOUND);
-       int [] array = new int[arraySize];
-       int size = Program.size(array);
-       assertEquals(size,array.length);
-   }
+    @Test
+    public void validSizeCheck()
+    {
+        int arraySize = this.rand.nextInt(this.BOUND);
+        int [] array = new int[arraySize];
+        int size = Program.size(array);
+        assertEquals(size,array.length);
+    }
 
     /**
      * This function will check the printArr function when the input is null
      */
-   @Test
+    @Test
     public void printArrNullCheck()
-   {
-       boolean pass = true;
-       try {
-           Program.printArr(null);
-       }
-       catch(Exception e)
-       {
-           pass = false;
+    {
+        boolean pass = true;
+        try {
+            Program.printArr(null);
+        }
+        catch(Exception e)
+        {
+            pass = false;
 
-       }
-       assertTrue(pass);
-   }
+        }
+        assertTrue(pass);
+    }
 
     /**
      * This function will check the minIndexValue function when the input is null
@@ -139,10 +306,10 @@ public class ProgramTest {
     @Test
     public void  maxValueIndexValidCheck()
     {
-        int [] arr = {4,3,2,1};
+        int [] arr = {3,4,2,1};
         int index;
         index = Program.maxValueIndex(arr);
-        assertEquals(0,index);
+        assertEquals(1,index);
     }
 
     /**
@@ -156,7 +323,17 @@ public class ProgramTest {
         index = Program.maxValueIndex(arr);
         assertEquals(-1,index);
     }
-
+    /**
+     * This function will check the maxValueIndex function when the input is an array with the size of 1
+     */
+    @Test
+    public void  maxValueIndexValidSingleCheck()
+    {
+        int [] arr = {this.rand.nextInt(this.BOUND)};
+        int index;
+        index = Program.maxValueIndex(arr);
+        assertEquals(0,index);
+    }
     /**
      * This function will check the maxValue function when the input is null
      */
@@ -447,6 +624,7 @@ public class ProgramTest {
     {
         boolean pass = true;
         int [] array = {6,5,4,3,2,1};
+        int [] array2 = {1,5,4,3,2,6};
         try
         {
             int [] arr = Program.swapMinMax(array);
@@ -459,6 +637,18 @@ public class ProgramTest {
             for(int i=2;i<arr.length-1;i++)
             {
                 assertEquals(array[i],arr[i]);
+            }
+
+            arr = Program.swapMinMax(array2);
+            assertTrue(arr !=null);
+            assertEquals(array2.length,arr.length);
+
+            assertEquals(arr[0],array2[5]);
+            assertEquals(array2[0],arr[5]);
+
+            for(int i=2;i<arr.length-1;i++)
+            {
+                assertEquals(array2[i],arr[i]);
             }
 
         }
@@ -525,7 +715,7 @@ public class ProgramTest {
         int [] arr = Program.sortArray(array);
         assertTrue(arr!=array);
         assertEquals(arr.length,array.length);
-       assertTrue(sameElements(array,arr));
+        assertTrue(sameElements(array,arr));
 
 
     }
@@ -556,14 +746,14 @@ public class ProgramTest {
     /**
      * This function will check the function equalArray when the inputs are 2 nulls
      */
-   @Test
-   public void equalArraysWhenBothNull()
-   {
-       int [] arr1 = null;
-       int [] arr2 = null;
-       assertTrue(Program.equalArrays(arr1,arr2));
-       assertTrue(Program.equalArrays(arr2,arr1));
-   }
+    @Test
+    public void equalArraysWhenBothNull()
+    {
+        int [] arr1 = null;
+        int [] arr2 = null;
+        assertTrue(Program.equalArrays(arr1,arr2));
+        assertTrue(Program.equalArrays(arr2,arr1));
+    }
 
     /**
      * This function will check the function equalArray when the inputs are one null object and one random array
@@ -688,13 +878,10 @@ public class ProgramTest {
         int [] merged = Program.merge(array1,array2);
         assertTrue(merged != null);
         assertTrue(sameElements(array1,merged));
-        merged = array1;
-        array1 = array2;
-        array2 = merged;
 
         merged = Program.merge(array2,array1);
         assertTrue(merged != null);
-        assertTrue(sameElements(array2,merged));
+        assertTrue(sameElements(array1,merged));
 
     }
     /**
@@ -777,5 +964,14 @@ public class ProgramTest {
             assertEquals(appear.intValue(),0);
 
         }
+    }
+
+    /**
+     * This function will restore the streams back to normal
+     */
+    @After
+    public void restoreStreams() {
+        System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 }

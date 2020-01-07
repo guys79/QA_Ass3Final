@@ -1,3 +1,4 @@
+package System;
 
 public class Program {
 	
@@ -47,12 +48,13 @@ public class Program {
 		int res = arr[0];
 		int index = 0;//
 		int indexMax = 0;//
-		for (int val: arr)
-			if (val>res)
-			{
+		for (int val: arr) {
+			if (val > res) {
 				res = val;
 				indexMax = index;//
 			}
+			index++;
+		}
 		//return res;
 		return indexMax;//
 	}
