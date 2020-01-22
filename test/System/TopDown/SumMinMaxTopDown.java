@@ -51,6 +51,7 @@ public class SumMinMaxTopDown {
         }
         assertTrue(pass);
 
+
         try
         {
             program = new SumMinMaxStubSizeWhenNull();
