@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Random;
 
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,6 +23,7 @@ public class ProgramTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
+    private Program program= new Program();
 
     /**
      * This function will set up the class for the unit testing
@@ -41,7 +43,7 @@ public class ProgramTest {
     @Test
     public void printArrayEmptyCheck(){
         int [] array = {};
-        Program.printArr(array);
+        program.printArr(array);
         String output = outContent.toString();
         String base = "\r\n";
         assertEquals(base,output);
@@ -54,7 +56,7 @@ public class ProgramTest {
     @Test
     public void printArrayValidCheck(){
         int [] array = randomArray();
-        Program.printArr(array);
+        program.printArr(array);
         String output = outContent.toString();
         String [] values = output.split(" ");
         assertTrue(bagOfStringWords(array,values));
@@ -116,7 +118,7 @@ public class ProgramTest {
     public void printSortedNull(){
 
         int [] array = null;
-        Program.printSorted(array);
+        program.printSorted(array);
         String output = outContent.toString();
         String base = "\r\n";
         assertEquals("No array"+ base,output);
@@ -128,7 +130,7 @@ public class ProgramTest {
     @Test
     public void printSortedEmptyCheck(){
         int [] array = {};
-        Program.printSorted(array);
+        program.printSorted(array);
         String output = outContent.toString();
         String base = "\r\n";
         assertEquals(base+base+base,output);
@@ -143,7 +145,7 @@ public class ProgramTest {
 
         int [] array = randomArray();
         //int [] array = {2,1};
-        Program.printSorted(array);
+        program.printSorted(array);
         String output = outContent.toString();
         String [] tempValues = output.split(" ");
         assertTrue(tempValues.length%3==1);
@@ -188,6 +190,14 @@ public class ProgramTest {
             num1 = Integer.parseInt(valuesSorted[i]);
             num2 = Integer.parseInt(valuesSorted[i+1]);
             assertTrue(num2>=num1);
+
+        }
+        for(int i=0;i<valuesSorted.length - 1;i++)//Without '\r\n'
+        {
+            num1 = Integer.parseInt(valuesNotSorted1[i]);
+            num2 = Integer.parseInt(valuesNotSorted2[i]);
+            assertEquals(num2,num1);
+
         }
 
 
@@ -200,7 +210,7 @@ public class ProgramTest {
     {
         boolean pass = true;
         try {
-            Program.size(null);
+            program.size(null);
         }
         catch(Exception e)
         {
@@ -218,7 +228,7 @@ public class ProgramTest {
     {
         int arraySize = this.rand.nextInt(this.BOUND);
         int [] array = new int[arraySize];
-        int size = Program.size(array);
+        int size = program.size(array);
         assertEquals(size,array.length);
     }
 
@@ -230,7 +240,7 @@ public class ProgramTest {
     {
         boolean pass = true;
         try {
-            Program.printArr(null);
+            program.printArr(null);
         }
         catch(Exception e)
         {
@@ -248,7 +258,7 @@ public class ProgramTest {
     {
         boolean pass = true;
         try {
-            Program.minValueIndex(null);
+            program.minValueIndex(null);
         }
         catch(Exception e)
         {
@@ -266,7 +276,7 @@ public class ProgramTest {
     {
         int [] arr = {4,3,2,1};
         int index;
-        index = Program.minValueIndex(arr);
+        index = program.minValueIndex(arr);
         assertEquals(3,index);
     }
 
@@ -278,7 +288,7 @@ public class ProgramTest {
     {
         int [] arr = {};
         int index;
-        index = Program.minValueIndex(arr);
+        index = program.minValueIndex(arr);
         assertEquals(-1,index);
     }
 
@@ -290,7 +300,7 @@ public class ProgramTest {
     {
         boolean pass = true;
         try {
-            Program.maxValueIndex(null);
+            program.maxValueIndex(null);
         }
         catch(Exception e)
         {
@@ -308,7 +318,7 @@ public class ProgramTest {
     {
         int [] arr = {3,4,2,1};
         int index;
-        index = Program.maxValueIndex(arr);
+        index = program.maxValueIndex(arr);
         assertEquals(1,index);
     }
 
@@ -320,7 +330,7 @@ public class ProgramTest {
     {
         int [] arr = {};
         int index;
-        index = Program.maxValueIndex(arr);
+        index = program.maxValueIndex(arr);
         assertEquals(-1,index);
     }
     /**
@@ -331,7 +341,7 @@ public class ProgramTest {
     {
         int [] arr = {this.rand.nextInt(this.BOUND)};
         int index;
-        index = Program.maxValueIndex(arr);
+        index = program.maxValueIndex(arr);
         assertEquals(0,index);
     }
     /**
@@ -343,7 +353,7 @@ public class ProgramTest {
         boolean pass = true;
         try
         {
-            Program.maxValue(null);
+            program.maxValue(null);
         }
         catch(Exception e)
         {
@@ -359,7 +369,7 @@ public class ProgramTest {
     public void maxValueValidInput()
     {
         int [] arr = {4,3,2,1};
-        int value = Program.maxValue(arr);
+        int value = program.maxValue(arr);
         assertEquals(4,value);
     }
 
@@ -373,7 +383,7 @@ public class ProgramTest {
         try
         {
             int [] arr = {};
-            int value = Program.maxValue(arr);
+            int value = program.maxValue(arr);
         }
         catch(Exception e)
         {
@@ -392,7 +402,7 @@ public class ProgramTest {
         boolean pass = true;
         try
         {
-            Program.minValue(null);
+            program.minValue(null);
         }
         catch(Exception e)
         {
@@ -408,7 +418,7 @@ public class ProgramTest {
     public void minValueValidInput()
     {
         int [] arr = {4,3,2,1};
-        int value = Program.minValue(arr);
+        int value = program.minValue(arr);
         assertEquals(1,value);
     }
 
@@ -422,7 +432,7 @@ public class ProgramTest {
         try
         {
             int [] arr = {};
-            int value = Program.minValue(arr);
+            int value = program.minValue(arr);
         }
         catch(Exception e)
         {
@@ -442,7 +452,7 @@ public class ProgramTest {
         try
         {
             int [] arr = null;
-            int value = Program.sumMinMax(arr);
+            int value = program.sumMinMax(arr);
         }
         catch(Exception e)
         {
@@ -461,7 +471,7 @@ public class ProgramTest {
         try
         {
             int [] arr = {};
-            int value = Program.sumMinMax(arr);
+            int value = program.sumMinMax(arr);
         }
         catch(Exception e)
         {
@@ -477,7 +487,7 @@ public class ProgramTest {
     public void sumMinMaxValidInput()
     {
         int [] arr = {4,3,2,1};
-        int value = Program.sumMinMax(arr);
+        int value = program.sumMinMax(arr);
         assertEquals(5,value);
     }
 
@@ -490,7 +500,7 @@ public class ProgramTest {
         boolean pass = true;
         try
         {
-            int [] arr = Program.copyArr(null);
+            int [] arr = program.copyArr(null);
             assertTrue(arr ==null);
         }
         catch(Exception e)
@@ -509,7 +519,7 @@ public class ProgramTest {
         int [] array = {};
         try
         {
-            int [] arr = Program.copyArr(array);
+            int [] arr = program.copyArr(array);
             assertTrue(arr !=null);
             assertEquals(array.length,arr.length);
 
@@ -560,7 +570,7 @@ public class ProgramTest {
         array[1] = 1;
         try
         {
-            int [] arr = Program.copyArr(array);
+            int [] arr = program.copyArr(array);
             assertTrue(arr != array);
             assertEquals(array.length,arr.length);
             for(int i=0;i<size;i++)
@@ -585,7 +595,7 @@ public class ProgramTest {
         boolean pass = true;
         try
         {
-            int [] arr = Program.swapMinMax(null);
+            int [] arr = program.swapMinMax(null);
             assertTrue(arr ==null);
         }
         catch(Exception e)
@@ -604,7 +614,7 @@ public class ProgramTest {
         int [] array = {};
         try
         {
-            int [] arr = Program.swapMinMax(array);
+            int [] arr = program.swapMinMax(array);
             assertTrue(arr ==null);
 
 
@@ -627,7 +637,8 @@ public class ProgramTest {
         int [] array2 = {1,5,4,3,2,6};
         try
         {
-            int [] arr = Program.swapMinMax(array);
+            int [] arr = program.swapMinMax(array);
+
             assertTrue(arr !=null);
             assertEquals(array.length,arr.length);
 
@@ -639,7 +650,7 @@ public class ProgramTest {
                 assertEquals(array[i],arr[i]);
             }
 
-            arr = Program.swapMinMax(array2);
+            arr = program.swapMinMax(array2);
             assertTrue(arr !=null);
             assertEquals(array2.length,arr.length);
 
@@ -712,7 +723,7 @@ public class ProgramTest {
     public void  sortArrayValidCheck()
     {
         int [] array = randomArray();
-        int [] arr = Program.sortArray(array);
+        int [] arr = program.sortArray(array);
         assertTrue(arr!=array);
         assertEquals(arr.length,array.length);
         assertTrue(sameElements(array,arr));
@@ -727,7 +738,7 @@ public class ProgramTest {
     public void  sortArrayValidEmptyCheck()
     {
         int [] array = {};
-        int [] arr = Program.sortArray(array);
+        int [] arr = program.sortArray(array);
         assertTrue(arr!=array);
         assertEquals(arr.length,array.length);
     }
@@ -738,7 +749,7 @@ public class ProgramTest {
     public void sortArrayNull()
     {
         int [] array = null;
-        int [] arr = Program.sortArray(array);
+        int [] arr = program.sortArray(array);
         assertTrue(arr==null);
 
     }
@@ -751,8 +762,8 @@ public class ProgramTest {
     {
         int [] arr1 = null;
         int [] arr2 = null;
-        assertTrue(Program.equalArrays(arr1,arr2));
-        assertTrue(Program.equalArrays(arr2,arr1));
+        assertTrue(program.equalArrays(arr1,arr2));
+        assertTrue(program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -763,8 +774,8 @@ public class ProgramTest {
     {
         int [] arr1 = randomArray();
         int [] arr2 = null;
-        assertTrue(!Program.equalArrays(arr1,arr2));
-        assertTrue(!Program.equalArrays(arr2,arr1));
+        assertTrue(!program.equalArrays(arr1,arr2));
+        assertTrue(!program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -775,8 +786,8 @@ public class ProgramTest {
     {
         int [] arr1 = {};
         int [] arr2 = {};
-        assertTrue(Program.equalArrays(arr1,arr2));
-        assertTrue(Program.equalArrays(arr2,arr1));
+        assertTrue(program.equalArrays(arr1,arr2));
+        assertTrue(program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -787,8 +798,8 @@ public class ProgramTest {
     {
         int [] arr1 = {1,2,3};
         int [] arr2 = {1,2,3,4};
-        assertTrue(!Program.equalArrays(arr1,arr2));
-        assertTrue(!Program.equalArrays(arr2,arr1));
+        assertTrue(!program.equalArrays(arr1,arr2));
+        assertTrue(!program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -803,8 +814,8 @@ public class ProgramTest {
         {
             arr2[i] = arr1[i];
         }
-        assertTrue(Program.equalArrays(arr1,arr2));
-        assertTrue(Program.equalArrays(arr2,arr1));
+        assertTrue(program.equalArrays(arr1,arr2));
+        assertTrue(program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -820,8 +831,8 @@ public class ProgramTest {
             arr2[i] = arr1[i];
         }
         arr2[0] = this.rand.nextInt(this.BOUND) +this.BOUND + 2;
-        assertTrue(!Program.equalArrays(arr1,arr2));
-        assertTrue(!Program.equalArrays(arr2,arr1));
+        assertTrue(!program.equalArrays(arr1,arr2));
+        assertTrue(!program.equalArrays(arr2,arr1));
     }
 
     /**
@@ -830,7 +841,7 @@ public class ProgramTest {
     @Test
     public void isSortedArrayWhenNull(){
         int [] array = null;
-        assertTrue(Program.isSorted(array));
+        assertTrue(program.isSorted(array));
     }
     /**
      * This function will check the isSorted function when the input is empty
@@ -838,7 +849,7 @@ public class ProgramTest {
     @Test
     public void isSortedArrayWhenEmpty(){
         int [] array = {};
-        assertTrue(Program.isSorted(array));
+        assertTrue(program.isSorted(array));
     }
     /**
      * This function will check the isSorted function when the input is a sorted array
@@ -846,7 +857,7 @@ public class ProgramTest {
     @Test
     public void isSortedArrayWhenNotSorted(){
         int [] array = {3,4,1};
-        assertTrue(!Program.isSorted(array));
+        assertTrue(!program.isSorted(array));
     }
     /**
      * This function will check the isSorted function when the input is a not sorted array
@@ -854,7 +865,7 @@ public class ProgramTest {
     @Test
     public void isSortedArrayWhenSorted(){
         int [] array = {1,2,3,4,5,5};
-        assertTrue(Program.isSorted(array));
+        assertTrue(program.isSorted(array));
     }
 
     /**
@@ -864,7 +875,7 @@ public class ProgramTest {
     public void mergeTwoNull(){
         int [] array1 = null;
         int [] array2 = null;
-        int [] merged = Program.merge(array1,array2);
+        int [] merged = program.merge(array1,array2);
         assertTrue(merged == null);
     }
     /**
@@ -875,11 +886,11 @@ public class ProgramTest {
         int [] array1 = {1,2,3,4};
         //int [] array1 = randomArray();
         int [] array2 = null;
-        int [] merged = Program.merge(array1,array2);
+        int [] merged = program.merge(array1,array2);
         assertTrue(merged != null);
         assertTrue(sameElements(array1,merged));
 
-        merged = Program.merge(array2,array1);
+        merged = program.merge(array2,array1);
         assertTrue(merged != null);
         assertTrue(sameElements(array1,merged));
 
@@ -891,7 +902,7 @@ public class ProgramTest {
     public void mergeTwoEmpty(){
         int [] array1 = {};
         int [] array2 = {};
-        int [] merged = Program.merge(array1,array2);
+        int [] merged = program.merge(array1,array2);
         assertTrue(merged != null);
         assertEquals(array1.length,0);
     }
@@ -902,14 +913,14 @@ public class ProgramTest {
     public void mergeOneEmpty(){
         int [] array1 = randomArray();
         int [] array2 = {};
-        int [] merged = Program.merge(array1,array2);
+        int [] merged = program.merge(array1,array2);
         assertTrue(merged != null);
         assertTrue(sameElements(array1,merged));
         merged = array1;
         array1 = array2;
         array2 = merged;
 
-        merged = Program.merge(array2,array1);
+        merged = program.merge(array2,array1);
         assertTrue(merged != null);
         assertTrue(sameElements(array2,merged));
     }
@@ -921,7 +932,7 @@ public class ProgramTest {
     public void mergeTwoArrays(){
         int [] array1 = randomArray();
         int [] array2 = randomArray();
-        int [] merged = Program.merge(array1,array2);
+        int [] merged = program.merge(array1,array2);
         assertTrue(merged != null);
         assertEquals(array1.length+array2.length,merged.length);
         HashMap<Integer,Integer> values = new HashMap<>();
