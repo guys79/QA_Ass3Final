@@ -245,7 +245,7 @@ public class ProgramTest {
         catch(Exception e)
         {
             pass = false;
-
+            e.printStackTrace();
         }
         assertTrue(pass);
     }
@@ -288,8 +288,15 @@ public class ProgramTest {
     {
         int [] arr = {};
         int index;
-        index = program.minValueIndex(arr);
-        assertEquals(-1,index);
+        try {
+            index = program.minValueIndex(arr);
+            assertEquals(-1,index);
+        }
+        catch (Exception e)
+        {
+            assertTrue(false);
+        }
+
     }
 
     /**
@@ -339,7 +346,7 @@ public class ProgramTest {
     @Test
     public void  maxValueIndexValidSingleCheck()
     {
-        int [] arr = {this.rand.nextInt(this.BOUND)};
+        int [] arr = {this.rand.nextInt(this.BOUND)+1};
         int index;
         index = program.maxValueIndex(arr);
         assertEquals(0,index);

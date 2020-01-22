@@ -1,19 +1,14 @@
 package System;
-
 public class Program {
 
 
 	// Returns the size of the array
 	public int size(int[] arr) {
-		if(arr == null)//
-			return -1;//
 		return arr.length;
-	}//Check for null
+	}
 
 	// Prints the array
-	public  void printArr(int[] arr) {
-		if(arr == null)//
-			return;//
+	public void printArr(int[] arr) {
 		for(int val: arr)
 			System.out.print(val+" ");
 		System.out.println();
@@ -21,69 +16,38 @@ public class Program {
 
 	// Returns index of the minimum value in the array
 	// Returns -1 if array is empty
-	public  int minValueIndex(int[] arr) {
+	public int minValueIndex(int[] arr) {
 		if (arr==null) return -1;
-		if(arr.length == 0) return -1;//
 		int res = arr[0];
-		int index = 0;//
-		int indexMin = 0;//
 		for (int val: arr)
-		{
-			if (val<res) {
-				res = val;
-				indexMin = index;//
-			}
-			index++;//
-		}
-
-		return indexMin;//
-		//	return res;
+			if (val<res) res = val;
+		return res;
 	}
 
 	// Returns index of the maximum value in the array
 	// Returns -1 if array is empty
-	public  int maxValueIndex(int[] arr) {
-		if (arr==null) return -1; //
+	public int maxValueIndex(int[] arr) {
 		if (size(arr)<1) return -1;
 		int res = arr[0];
-		int index = 0;//
-		int indexMax = 0;//
-		for (int val: arr) {
-			if (val > res) {
-				res = val;
-				indexMax = index;//
-			}
-			index++;
-		}
-		//return res;
-		return indexMax;//
+		for (int val: arr)
+			if (val>res) res = val;
+		return res;
 	}
 
 	// Returns the maximum value in the array
-	public  int maxValue(int[] arr) {
+	public int maxValue(int[] arr) {
 		int ind = maxValueIndex(arr);
-		if(ind == -1)//
-			return -1;//
 		return arr[ind];
 	}
 
 	// Returns the minimum value in the array
-	public  int minValue(int[] arr) {
-
-		//int ind = maxValueIndex(arr);//LOL
-		int ind = minValueIndex(arr);//
-		if(ind == -1)//
-			return -1;//
+	public int minValue(int[] arr) {
+		int ind = maxValueIndex(arr);
 		return arr[ind];
 	}
 
 	// Returns sum of minimum and maximum values in the array
-	public  int sumMinMax(int[] arr)
-	{
-		int max = maxValue(arr);
-		int min = minValue(arr);
-		if(max == -1 || min == -1)
-			return -1;
+	public int sumMinMax(int[] arr) {
 		return minValue(arr) + maxValue(arr);
 	}
 
@@ -93,8 +57,7 @@ public class Program {
 		if (arr == null) return null;
 		int[] res = new int[size(arr)];
 		for(int i=0; i<size(arr); i++)
-			//res[i] = arr[0];
-			res[i] = arr[i];//
+			res[i] = arr[0];
 		return res;
 	}
 
@@ -103,8 +66,7 @@ public class Program {
 	public int[] swapMinMax(int[] arr) {
 		int[] res = copyArr(arr);
 		int minInd = minValueIndex(arr);
-		//int maxInd = maxValue(arr);
-		int maxInd = maxValueIndex(arr);//
+		int maxInd = maxValue(arr);
 		if (minInd <0 || maxInd <0) return null;
 		res[minInd] = arr[maxInd];
 		res[maxInd] = arr[minInd];
@@ -113,7 +75,7 @@ public class Program {
 
 
 	// Returns an ascending sorted copy of array "arr"
-	public int[] sortArray(int[] arr) { // Bubble sort
+	public int[] sortArray(int[] arr) {
 		if (arr == null) return null;
 		int[] res = copyArr(arr);
 		for(int i=0; i<size(arr); i++)
@@ -133,10 +95,8 @@ public class Program {
 		if (arr1==null || arr2 == null) return false;
 		if (size(arr1)!=size(arr2)) return false;
 		for (int i=0; i<size(arr1); i++)
-			//	if (arr1[i]==arr2[i]) return true;
-			if (arr1[i]!=arr2[i]) return false;//
-		//return false;
-		return true;//
+			if (arr1[i]==arr2[i]) return true;
+		return false;
 	}
 
 
@@ -174,7 +134,7 @@ public class Program {
 		if (arr==null)
 			System.out.println("No array");
 		printArr(arr);
-		//arr = sortArray(arr);
+		arr = sortArray(arr);
 		printArr(sortArray(arr));
 		printArr(arr);
 	}
